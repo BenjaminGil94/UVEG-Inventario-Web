@@ -1,0 +1,18 @@
+# Archivos temporales de Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Configuración local y secretos
+.env
+.env.*
+
+# Archivos de distribución
+dist/
+*.zip
+
+# Archivos temporales
+*.log
+.DS_Store
+Thumbs.db
