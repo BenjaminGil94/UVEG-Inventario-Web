@@ -1,69 +1,124 @@
-
 # Inventario Escolar
 
-Proyecto académico ficticio desarrollado para el módulo
-Despliegue de aplicaciones web y móviles de la Universidad
-Virtual del Estado de Guanajuato (UVEG).
+Proyecto académico desarrollado para el módulo **Despliegue de aplicaciones web y móviles** de la Universidad Virtual del Estado de Guanajuato (UVEG).
 
 ## Objetivo
 
-Simular la preparación, optimización, empaquetado,
-versionamiento y despliegue de una aplicación web
-para la gestión de inventarios.
+Simular el despliegue de una aplicación web de inventario, integrando una interfaz de usuario, un backend, una base de datos relacional y un servidor web local.
+
+El proyecto permite consultar productos y sus existencias almacenados en MySQL.
 
 ## Tecnologías utilizadas
 
 - HTML5
 - CSS3
 - JavaScript
-- Python
-- Flask (backend ilustrativo)
-- MySQL (integración propuesta)
+- Python 3
+- Flask
+- MySQL 8.0
+- Nginx 1.30.6
 - Git y GitHub
-- Nginx (servidor web por configurar)
+- SSL/TLS para HTTPS
 
 ## Estructura del proyecto
 
-- public/: interfaz web
-- public/css/: hojas de estilo
-- public/js/: archivos JavaScript
-- public/img/: recursos gráficos
-- app.py: backend Flask ilustrativo
-- schema.sql: estructura de base de datos
-- requirements.txt: dependencias de Python
-- nginx.conf: configuración de ejemplo
+- `public/`: archivos públicos de la aplicación.
+- `public/index.html`: página principal del inventario.
+- `public/css/`: estilos CSS.
+- `public/js/`: lógica JavaScript.
+- `public/privacidad.html`: aviso de privacidad.
+- `public/terminos.html`: términos de uso.
+- `app.py`: backend desarrollado con Flask.
+- `schema.sql`: estructura de la base de datos MySQL.
+- `requirements.txt`: dependencias de Python.
+- `nginx.conf`: archivo de configuración de referencia para Nginx.
+- `DESPLIEGUE.md`: documentación del despliegue.
+- `INSTALL.md`: instrucciones complementarias de instalación.
+
+## Funcionamiento
+
+La aplicación utiliza tres componentes principales:
+
+1. **Frontend:** muestra los productos y sus existencias mediante HTML, CSS y JavaScript.
+2. **Backend:** Flask proporciona una API que consulta los registros de MySQL.
+3. **Servidor web:** Nginx entrega los archivos estáticos y funciona como proxy inverso hacia Flask.
+
+El frontend consulta el endpoint `/api/productos` para obtener la información en formato JSON.
+
+## Base de datos
+
+Se utiliza la base de datos `inventario_escolar`, que contiene las tablas:
+
+- `productos`
+- `movimientos`
+
+La tabla `movimientos` se relaciona con `productos` mediante una clave foránea.
+
+Los productos utilizados durante las pruebas fueron:
+
+| Producto | Existencias |
+|---|---:|
+| Pan | 3 |
+| Leche | 8 |
 
 ## Ejecución local
 
-1. Abrir CMD en la carpeta public.
-2. Ejecutar: python -m http.server 8000
-3. Abrir http://localhost:8000
+### 1. Preparar MySQL
 
-## Optimización
+Instalar MySQL y crear la base de datos ejecutando el archivo `schema.sql`.
 
-El proyecto incluye archivos CSS y JavaScript
-minificados para reducir su tamaño.
+### 2. Instalar las dependencias de Python
 
-## Empaquetado
+Desde la carpeta principal del proyecto, ejecutar:
 
-Se organizó el contenido público de la aplicación
-en una carpeta de distribución y se generó un
-archivo ZIP utilizando el Explorador de Windows.
+```bat
+python -m venv .venv
+.venv\Scripts\activate
+pip install -r requirements.txt
+```
 
-El paquete fue extraído y probado en el puerto
-8001 mediante un servidor HTTP local de Python.
+### 3. Configurar la conexión con MySQL
 
-## Control de versiones
+En CMD, definir el usuario y solicitar la contraseña:
 
-Se utilizará Git para registrar los cambios
-del proyecto y GitHub para almacenar el repositorio.
+```bat
+set "DB_USER=root"
+set /p "DB_PASSWORD=Contraseña de MySQL: "
+```
 
-## Alcance académico
+Estas variables se utilizan para la conexión local. No se deben publicar contraseñas en el repositorio.
 
-La interfaz utiliza datos de ejemplo y no está
-conectada al backend Flask.
+### 4. Ejecutar Flask
 
-La integración con MySQL y las pruebas de seguridad
-se abordarán durante el Reto 3.
+En la misma terminal:
 
-No se requiere un servidor de producción.
+```bat
+python app.py
+```
+
+El backend utiliza el puerto `5000`.
+
+### 5. Ejecutar Nginx
+
+Configurar Nginx para utilizar la carpeta `public` como directorio raíz y redirigir `/api/` hacia Flask.
+
+El archivo `nginx.conf` del proyecto sirve como referencia. La configuración activa de Nginx debe ajustarse a las rutas de instalación de cada computadora.
+
+### 6. Configurar el dominio local
+
+Agregar al archivo `hosts` de Windows:
+
+```text
+127.0.0.1 inventario.test
+```
+
+### 7. Abrir la aplicación
+
+- HTTP: http://inventario.test:8080/
+- HTTPS: https://inventario.test:8443/
+
+La dirección HTTPS requiere un certificado local y la configuración correspondiente de Nginx.
+
+El certificado utilizado en esta práctica es autofirmado, por lo que el navegador puede mostrar una advertencia de seguridad.
+
+## API

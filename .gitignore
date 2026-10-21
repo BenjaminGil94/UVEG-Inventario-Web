@@ -16,3 +16,13 @@ dist/
 *.log
 .DS_Store
 Thumbs.db
+
+# Certificados y claves privadas
+*.key
+*.pem
+*.p12
+*.pfx
+
+# Certificados generados localmente
+conf/ssl/
+ssl/
